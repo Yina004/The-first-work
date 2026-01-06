@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Could you buy me a cup of milk tea</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffd6e7 0%, #c1f0ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #ff9ec0;
+        }
+        
+        .header {
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            color: #ff4081;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 #ffd1e0;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #ff79a9;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        
+        .meme-container {
+            margin: 25px auto;
+            max-width: 450px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 5px solid #ff9ec0;
+            position: relative;
+        }
+        
+        .meme-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .meme-img:hover {
+            transform: scale(1.02);
+        }
+        
+        .invitation-text {
+            background: linear-gradient(to right, #ff9ec0, #ff4081);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 30px 0;
+            padding: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1.3;
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0 30px;
+            position: relative;
+            min-height: 120px;
+            padding: 20px;
+        }
+        
+        .btn {
+            padding: 18px 40px;
+            font-size: 1.8rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            min-width: 200px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #ff4081, #ff79a9);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(255, 64, 129, 0.4);
+            background: linear-gradient(45deg, #ff79a9, #ff4081);
+        }
+
+        .btn-yes:active {
+            transform: translateY(0);
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #36d1dc, #5b86e5);
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn-no:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-no:active {
+            transform: scale(1);
+        }
+        
+        /* 为移动的按钮添加动画 */
+        .btn-no.moving {
+            transition: left 0.3s ease, top 0.3s ease, transform 0.3s ease;
+            position: absolute !important;
+        }
+        
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+            z-index: 1;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #ff9ec0, #ffd6e7);
+            border-radius: 25px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 10px solid white;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .modal-content h2 {
+            color: #ff4081;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.5);
+        }
+        
+        .modal-content p {
+            font-size: 1.8rem;
+            color: #d81b60;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        
+        .close-modal {
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4);
+        }
+        
+        .close-modal:hover {
+            background-color: #d81b60;
+            transform: scale(1.05);
+        }
+        
+        .hearts {
+            position: absolute;
+            font-size: 2rem;
+            color: #ff4081;
+            animation: heartFloat 3s linear infinite;
+        }
+        
+        @keyframes heartFloat {
+            0% { transform: translateY(100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .counter {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #ff4081;
+            font-weight: bold;
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            color: #666;
+            font-size: 1rem;
+            font-style: italic;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #ff79a9;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                border-width: 5px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .invitation-text {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 15px 30px;
+                font-size: 1.5rem;
+                min-width: 160px;
+            }
+            
+            .buttons-container {
+                gap: 20px;
+                min-height: 150px;
+            }
+            
+            .modal-content h2 {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .invitation-text {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 1.3rem;
+                min-width: 140px;
+            }
+            
+            .modal-content {
+                padding: 30px 20px;
+            }
+            
+            .modal-content h2 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="meme-container">
+            <img src="./webwxgetmsgimg.gif" alt="奶茶表情包" class="meme-img">
+        </div>
+        
+        <div class="invitation-text">
+            <i class="fas fa-mug-hot"></i> 可不可以请我喝新年的第一杯奶茶？ <i class="fas fa-heart"></i>
+        </div>
+        
+        <div class="buttons-container">
+            <button class="btn btn-yes" id="yesBtn">
+                <i class="fas fa-check-circle"></i> 可以
+            </button>
+            <button class="btn btn-no" id="noBtn">
+                <i class="fas fa-times-circle"></i> 不可以
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 Could you buy me a cup of milk tea? | Yina</p>
+        </div>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div class="modal" id="loveModal">
+        <div class="modal-content">
+            <h2>爱你宝宝 <i class="fas fa-heart"></i></h2>
+            <button class="close-modal" id="closeModal">关闭弹窗</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const loveModal = document.getElementById('loveModal');
+            const closeModal = document.getElementById('closeModal');
+            const buttonsContainer = document.querySelector('.buttons-container');
+            const container = document.querySelector('.container');
+            
+            let noBtnClickCount = 0;
+            
+            
+            
+            // 创建爱心动画
+            function createHearts() {
+                const heartsCount = 30;
+                
+                for (let i = 0; i < heartsCount; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('hearts');
+                    heart.innerHTML = '❤️';
+                    
+                    // 随机位置
+                    heart.style.left = `${Math.random() * 100}%`;
+                    
+                    // 随机大小
+                    const size = Math.random() * 2 + 1;
+                    heart.style.fontSize = `${size}rem`;
+                    
+                    // 随机动画延迟和持续时间
+                    heart.style.animationDelay = `${Math.random() * 2}s`;
+                    heart.style.animationDuration = `${Math.random() * 2 + 2}s`;
+                    
+                    loveModal.querySelector('.modal-content').appendChild(heart);
+                }
+            }
+            
+            // 点击"可以"按钮
+            yesBtn.addEventListener('click', function() {
+                loveModal.style.display = 'flex';
+                createHearts();
+                
+                // 添加庆祝效果
+                confettiEffect();
+            });
+            
+            // 点击"不可以"按钮
+            noBtn.addEventListener('click', function() {
+                noBtnClickCount++;
+                
+                // 确保按钮容器是相对定位的
+                buttonsContainer.style.position = 'relative';
+                
+                // 添加移动类
+                noBtn.classList.add('moving');
+                
+                // 获取按钮和容器的尺寸
+                const containerRect = buttonsContainer.getBoundingClientRect();
+                const noBtnRect = noBtn.getBoundingClientRect();
+                const yesBtnRect = yesBtn.getBoundingClientRect();
+                
+                // 计算安全移动区域，确保按钮不会超出容器
+                const padding = 10; // 最小边距
+                const maxX = containerRect.width - noBtnRect.width - padding * 2;
+                const maxY = containerRect.height - noBtnRect.height - padding * 2;
+                
+                // 尝试找到不重叠的位置
+                let attempts = 0;
+                let newX, newY;
+                let foundValidPosition = false;
+                
+                while (attempts < 50 && !foundValidPosition) {
+                    // 生成随机位置
+                    newX = Math.random() * maxX + padding;
+                    newY = Math.random() * maxY + padding;
+                    
+                    // 检查是否与"可以"按钮重叠
+                    const noBtnCenterX = newX + noBtnRect.width / 2;
+                    const noBtnCenterY = newY + noBtnRect.height / 2;
+                    
+                    // "可以"按钮在容器中的相对位置
+                    const yesBtnLeft = yesBtnRect.left - containerRect.left;
+                    const yesBtnTop = yesBtnRect.top - containerRect.top;
+                    const yesBtnCenterX = yesBtnLeft + yesBtnRect.width / 2;
+                    const yesBtnCenterY = yesBtnTop + yesBtnRect.height / 2;
+                    
+                    // 计算两个按钮中心之间的距离
+                    const distance = Math.sqrt(
+                        Math.pow(noBtnCenterX - yesBtnCenterX, 2) + 
+                        Math.pow(noBtnCenterY - yesBtnCenterY, 2)
+                    );
+                    
+                    // 检查是否与容器边缘重叠
+                    const isWithinBounds = 
+                        newX >= padding && 
+                        newX <= maxX + padding &&
+                        newY >= padding && 
+                        newY <= maxY + padding;
+                    
+                    // 确保距离足够远（至少为两个按钮宽度之和的一半）
+                    const minDistance = (yesBtnRect.width + noBtnRect.width) / 2;
+                    
+                    if (isWithinBounds && distance >= minDistance) {
+                        foundValidPosition = true;
+                    }
+                    
+                    attempts++;
+                }
+                
+                // 如果找不到合适位置，使用一个默认的随机位置
+                if (!foundValidPosition) {
+                    newX = Math.random() * maxX + padding;
+                    newY = Math.random() * maxY + padding;
+                }
+                
+                // 移动按钮到新位置
+                noBtn.style.left = `${newX}px`;
+                noBtn.style.top = `${newY}px`;
+                
+                // 添加点击效果
+                noBtn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    noBtn.style.transform = 'scale(1)';
+                }, 150);
+                
+                // 每点击3次，按钮会稍微变小
+                if (noBtnClickCount % 3 === 0 && noBtnClickCount <= 15) {
+                    const currentWidth = parseFloat(getComputedStyle(noBtn).width);
+                    noBtn.style.minWidth = `${Math.max(100, currentWidth * 0.9)}px`;
+                }
+                
+                
+            });
+            
+            // 关闭弹窗
+            closeModal.addEventListener('click', function() {
+                loveModal.style.display = 'none';
+                // 清除所有爱心
+                const hearts = loveModal.querySelectorAll('.hearts');
+                hearts.forEach(heart => heart.remove());
+            });
+            
+            // 点击弹窗外部关闭
+            loveModal.addEventListener('click', function(e) {
+                if (e.target === loveModal) {
+                    loveModal.style.display = 'none';
+                    const hearts = loveModal.querySelectorAll('.hearts');
+                    hearts.forEach(heart => heart.remove());
+                }
+            });
+            
+            // 庆祝特效
+            function confettiEffect() {
+                const confettiCount = 100;
+                const colors = ['#ff4081', '#ff9ec0', '#36d1dc', '#5b86e5', '#ffcc00'];
+                
+                for (let i = 0; i < confettiCount; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                    confetti.style.top = '-10px';
+                    confetti.style.zIndex = '1000';
+                    confetti.style.opacity = '0.9';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // 动画
+                    const animation = confetti.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: Math.random() * 2000 + 1000,
+                        easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                    });
+                    
+                    // 动画结束后移除元素
+                    animation.onfinish = () => confetti.remove();
+                }
+            }
+            
+            // 初始化页面
+            createBubbles();
+        });
+    </script>
+</body>
+</html>
